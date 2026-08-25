@@ -1,0 +1,987 @@
+/* =========================================================
+   XOXO — TIC-TAC-TOE PRO (4 THEMES)
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0a0f0d;
+    --panel: #141c18;
+    --panel-hover: #1c2822;
+    --line: rgba(226, 232, 224, 0.07);
+    --line-strong: rgba(226, 232, 224, 0.15);
+    --ink: #e9ede7;
+    --ink-dim: #7a8f80;
+    --ink-dimmer: #4a5f52;
+    --x-color: #ff6a3d;
+    --o-color: #c8ff4d;
+    --draw-color: #9aa79c;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --transition: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    --font-display: 'Space Grotesk', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-display);
+    padding: 20px;
+    transition: background 0.5s, color 0.5s;
+}
+
+.wrap {
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    margin-bottom: 20px;
+}
+
+.header .eyebrow {
+    font-size: 0.9rem;
+    color: var(--x-color);
+    margin-bottom: 4px;
+}
+
+.header h1 {
+    font-size: 4rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--ink);
+}
+
+.header .subtitle {
+    margin-top: 8px;
+    color: var(--ink-dim);
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   THEME SELECTOR
+========================================================= */
+
+.theme-select {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.theme-btn {
+    padding: 6px 4px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink-dim);
+    font-family: inherit;
+    font-size: 0.55rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.theme-btn.active {
+    border-color: var(--line-strong);
+    color: var(--ink);
+    background: var(--panel-hover);
+}
+
+.theme-btn:hover:not(.active) {
+    border-color: var(--line-strong);
+    color: var(--ink);
+}
+
+/* =========================================================
+   MODE SELECTOR
+========================================================= */
+
+.mode-select {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 18px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 4px;
+    border: 1px solid var(--line);
+}
+
+.mode-btn {
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--ink-dim);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mode-btn.active {
+    background: var(--panel-hover);
+    color: var(--ink);
+}
+
+.mode-btn:hover:not(.active) {
+    color: var(--ink);
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    background: var(--panel);
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.dot.x {
+    background: var(--x-color);
+}
+
+.dot.o {
+    background: var(--o-color);
+}
+
+.dot.draw {
+    background: var(--draw-color);
+}
+
+.timer {
+    margin-left: auto;
+    color: var(--ink-dim);
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* =========================================================
+   BOARD
+========================================================= */
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    aspect-ratio: 1;
+    background: var(--panel);
+    padding: 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-bottom: 24px;
+    transition: background 0.5s, border 0.5s;
+}
+
+.cell {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 9vw, 3.4rem);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: transparent;
+    aspect-ratio: 1;
+}
+
+.cell:hover:not(:disabled) {
+    background: var(--panel-hover);
+    border-color: var(--line-strong);
+    transform: scale(1.02);
+}
+
+.cell:active:not(:disabled) {
+    transform: scale(0.94);
+}
+
+.cell:disabled {
+    cursor: default;
+}
+
+.cell.x {
+    color: var(--x-color);
+}
+
+.cell.o {
+    color: var(--o-color);
+}
+
+.cell.pop {
+    animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cell.win {
+    animation: winPulse 0.6s ease;
+}
+
+.cell.win.x {
+    background: rgba(255, 106, 61, 0.08);
+    border-color: var(--x-color);
+}
+
+.cell.win.o {
+    background: rgba(200, 255, 77, 0.08);
+    border-color: var(--o-color);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes winPulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+/* =========================================================
+   SCOREBOARD
+========================================================= */
+
+.scoreboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.score-item {
+    background: var(--panel);
+    padding: 12px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    transition: 0.3s;
+}
+
+.score-item .label {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--ink-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.score-item .value {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 2px 0;
+}
+
+.score-item .sub {
+    display: block;
+    font-size: 0.5rem;
+    color: var(--ink-dimmer);
+    letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.stat-item {
+    background: var(--panel);
+    padding: 8px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.5rem;
+    color: var(--ink-dimmer);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+.btn-reset {
+    width: 100%;
+    padding: 14px 0;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-reset:hover {
+    border-color: var(--ink-dim);
+    background: var(--panel-hover);
+}
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    opacity: 0;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    0% {
+        opacity: 1;
+        transform: translateY(-20px) rotate(0deg) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg) scale(0.3);
+    }
+}
+
+/* =========================================================
+   SPOOKY EFFECTS
+========================================================= */
+
+.spooky-effects {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+body[data-theme="spooky"] .spooky-effects {
+    display: block;
+}
+
+.bat,
+.ghost {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.15;
+    animation: floatSpooky linear infinite;
+}
+
+.bat1 {
+    top: 10%;
+    left: 5%;
+    animation-duration: 18s;
+}
+
+.bat2 {
+    bottom: 15%;
+    right: 5%;
+    animation-duration: 22s;
+    animation-delay: 3s;
+}
+
+.ghost1 {
+    top: 20%;
+    right: 8%;
+    animation-duration: 25s;
+    animation-delay: 5s;
+    font-size: 2rem;
+}
+
+.ghost2 {
+    bottom: 25%;
+    left: 8%;
+    animation-duration: 20s;
+    animation-delay: 8s;
+    font-size: 1.8rem;
+}
+
+@keyframes floatSpooky {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(30px, -20px) rotate(5deg);
+    }
+
+    50% {
+        transform: translate(-20px, 30px) rotate(-5deg);
+    }
+
+    75% {
+        transform: translate(40px, 10px) rotate(3deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+/* =========================================================
+   ARCADE EFFECTS
+========================================================= */
+
+.arcade-effects {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+body[data-theme="arcade"] .arcade-effects {
+    display: block;
+}
+
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.15) 3px,
+        rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+    animation: scanlineMove 8s linear infinite;
+}
+
+@keyframes scanlineMove {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 60%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
+    pointer-events: none;
+}
+
+/* =========================================================
+   THEME 1: SPOOKY
+========================================================= */
+
+body[data-theme="spooky"] {
+    --bg: #0a0505;
+    --panel: #1a0a0a;
+    --panel-hover: #2a1010;
+    --line: rgba(180, 60, 60, 0.12);
+    --line-strong: rgba(180, 60, 60, 0.25);
+    --ink: #e8d5d5;
+    --ink-dim: #a87a7a;
+    --ink-dimmer: #6a4a4a;
+    --x-color: #ff4444;
+    --o-color: #ff8800;
+    --draw-color: #8a6a6a;
+}
+
+body[data-theme="spooky"] .header h1 {
+    font-family: 'Creepster', cursive;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #ff4444, #ff8800);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body[data-theme="spooky"] .cell.x {
+    text-shadow: 0 0 40px rgba(255, 68, 68, 0.5);
+}
+
+body[data-theme="spooky"] .cell.o {
+    text-shadow: 0 0 40px rgba(255, 136, 0, 0.5);
+}
+
+/* =========================================================
+   THEME 2: NEON
+========================================================= */
+
+body[data-theme="neon"] {
+    --bg: #0a0015;
+    --panel: #15002a;
+    --panel-hover: #250040;
+    --line: rgba(180, 60, 255, 0.12);
+    --line-strong: rgba(180, 60, 255, 0.25);
+    --ink: #e8d5ff;
+    --ink-dim: #a87add;
+    --ink-dimmer: #6a4a8a;
+    --x-color: #ff00ff;
+    --o-color: #00ffff;
+    --draw-color: #8a6aaa;
+}
+
+body[data-theme="neon"] .header h1 {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, #ff00ff, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body[data-theme="neon"] .cell.x {
+    color: #ff00ff;
+    text-shadow: 0 0 40px rgba(255, 0, 255, 0.5);
+}
+
+body[data-theme="neon"] .cell.o {
+    color: #00ffff;
+    text-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
+}
+
+@keyframes neonPulseX {
+    0%,
+    100% {
+        text-shadow: 0 0 40px rgba(255, 0, 255, 0.5);
+    }
+
+    50% {
+        text-shadow: 0 0 80px rgba(255, 0, 255, 0.8);
+    }
+}
+
+@keyframes neonPulseO {
+    0%,
+    100% {
+        text-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
+    }
+
+    50% {
+        text-shadow: 0 0 80px rgba(0, 255, 255, 0.8);
+    }
+}
+
+body[data-theme="neon"] .cell.x {
+    animation: neonPulseX 1.5s ease-in-out infinite;
+}
+
+body[data-theme="neon"] .cell.o {
+    animation: neonPulseO 1.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   THEME 3: LUXURY BLACK & GOLD
+========================================================= */
+
+body[data-theme="luxury"] {
+    --bg: #0a0806;
+    --panel: #14100c;
+    --panel-hover: #1f1a14;
+    --line: rgba(212, 175, 55, 0.10);
+    --line-strong: rgba(212, 175, 55, 0.25);
+    --ink: #d4c9b8;
+    --ink-dim: #a8947a;
+    --ink-dimmer: #6a5f4a;
+    --x-color: #d4af37;
+    --o-color: #d4af37;
+    --draw-color: #a8947a;
+    background: #0a0806;
+}
+
+body[data-theme="luxury"] .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-style: italic;
+    color: #d4af37;
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+    -webkit-text-fill-color: #d4af37;
+}
+
+body[data-theme="luxury"] .board {
+    background: rgba(20, 16, 12, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow:
+        0 0 60px rgba(212, 175, 55, 0.05),
+        inset 0 0 60px rgba(212, 175, 55, 0.02);
+}
+
+body[data-theme="luxury"] .cell {
+    background: rgba(10, 8, 6, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+body[data-theme="luxury"] .cell:hover:not(:disabled) {
+    background: rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+body[data-theme="luxury"] .cell.x,
+body[data-theme="luxury"] .cell.o {
+    color: #d4af37;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+}
+
+body[data-theme="luxury"] .status,
+body[data-theme="luxury"] .score-item,
+body[data-theme="luxury"] .stat-item {
+    background: rgba(20, 16, 12, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+body[data-theme="luxury"] .mode-select {
+    background: rgba(20, 16, 12, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+body[data-theme="luxury"] .mode-btn.active {
+    background: rgba(212, 175, 55, 0.08);
+    color: #d4af37;
+}
+
+body[data-theme="luxury"] .btn-reset {
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+}
+
+body[data-theme="luxury"] .btn-reset:hover {
+    background: rgba(212, 175, 55, 0.05);
+    border-color: rgba(212, 175, 55, 0.4);
+}
+
+body[data-theme="luxury"] .theme-btn.active {
+    border-color: rgba(212, 175, 55, 0.3);
+    color: #d4af37;
+}
+
+body[data-theme="luxury"] .dot.x,
+body[data-theme="luxury"] .dot.o {
+    background: #d4af37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+body[data-theme="luxury"] .score-item .value,
+body[data-theme="luxury"] .stat-value,
+body[data-theme="luxury"] .timer {
+    color: #d4af37;
+}
+
+body[data-theme="luxury"] .cell.win.x,
+body[data-theme="luxury"] .cell.win.o {
+    background: rgba(212, 175, 55, 0.08);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+/* =========================================================
+   THEME 4: RETRO ARCADE
+========================================================= */
+
+body[data-theme="arcade"] {
+    --bg: #1a0a2e;
+    --panel: #2d1b4a;
+    --panel-hover: #3d2a5a;
+    --line: rgba(255, 0, 255, 0.10);
+    --line-strong: rgba(255, 0, 255, 0.20);
+    --ink: #ff00ff;
+    --ink-dim: #ff66ff;
+    --ink-dimmer: #aa44aa;
+    --x-color: #ff00ff;
+    --o-color: #00ffff;
+    --draw-color: #ffff00;
+    background: #1a0a2e;
+}
+
+body[data-theme="arcade"] .header h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3rem;
+    color: #ff00ff;
+    text-shadow:
+        0 0 20px rgba(255, 0, 255, 0.4),
+        0 0 60px rgba(255, 0, 255, 0.1);
+}
+
+body[data-theme="arcade"] .header .eyebrow {
+    color: #ffff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.5rem;
+}
+
+body[data-theme="arcade"] .board {
+    background: #2d1b4a;
+    border: 2px solid #ff00ff;
+    box-shadow:
+        0 0 40px rgba(255, 0, 255, 0.1),
+        inset 0 0 40px rgba(255, 0, 255, 0.05);
+}
+
+body[data-theme="arcade"] .cell {
+    background: #1a0a2e;
+    border: 1px solid rgba(255, 0, 255, 0.08);
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+}
+
+body[data-theme="arcade"] .cell:hover:not(:disabled) {
+    background: #3d2a5a;
+    border-color: rgba(255, 0, 255, 0.2);
+}
+
+body[data-theme="arcade"] .cell.x {
+    color: #ff00ff;
+    text-shadow:
+        0 0 30px rgba(255, 0, 255, 0.5),
+        0 0 60px rgba(255, 0, 255, 0.2);
+}
+
+body[data-theme="arcade"] .cell.o {
+    color: #00ffff;
+    text-shadow:
+        0 0 30px rgba(0, 255, 255, 0.5),
+        0 0 60px rgba(0, 255, 255, 0.2);
+}
+
+body[data-theme="arcade"] .status {
+    background: #2d1b4a;
+    border: 1px solid rgba(255, 255, 0, 0.15);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.6rem;
+}
+
+body[data-theme="arcade"] .status .timer {
+    font-family: 'Press Start 2P', cursive;
+    color: #ffff00;
+}
+
+body[data-theme="arcade"] .score-item,
+body[data-theme="arcade"] .stat-item {
+    background: #2d1b4a;
+    border: 1px solid rgba(255, 0, 255, 0.08);
+}
+
+body[data-theme="arcade"] .score-item .label {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.45rem;
+    color: #ff66ff;
+}
+
+body[data-theme="arcade"] .score-item .value {
+    color: #ff00ff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+}
+
+body[data-theme="arcade"] .stat-label {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.4rem;
+    color: #ff66ff;
+}
+
+body[data-theme="arcade"] .stat-value {
+    font-family: 'Press Start 2P', cursive;
+    color: #ffff00;
+    font-size: 0.8rem;
+}
+
+body[data-theme="arcade"] .mode-select {
+    background: #2d1b4a;
+    border: 1px solid rgba(255, 0, 255, 0.12);
+}
+
+body[data-theme="arcade"] .mode-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55rem;
+    color: #ff66ff;
+}
+
+body[data-theme="arcade"] .mode-btn.active {
+    background: #3d2a5a;
+    color: #ff00ff;
+}
+
+body[data-theme="arcade"] .btn-reset {
+    border: 1px solid rgba(255, 0, 255, 0.2);
+    color: #ff00ff;
+}
+
+body[data-theme="arcade"] .btn-reset:hover {
+    background: rgba(255, 0, 255, 0.05);
+    border-color: rgba(255, 0, 255, 0.3);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .header h1 {
+        font-size: 3.5rem;
+    }
+
+    .header .subtitle {
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+    }
+
+    .theme-btn {
+        font-size: 0.6rem;
+        padding: 6px 4px;
+    }
+
+    .mode-btn {
+        font-size: 0.7rem;
+        padding: 8px 6px;
+    }
+
+    .status {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+
+    .board {
+        padding: 6px;
+        gap: 6px;
+    }
+
+    .cell {
+        font-size: clamp(1.8rem, 8vw, 2.8rem);
+    }
+
+    .score-item .value {
+        font-size: 1.3rem;
+    }
+
+    .btn-reset {
+        font-size: 0.75rem;
+        padding: 12px 0;
+    }
+
+    .theme-select {
+        gap: 3px;
+    }
+}
+
+@media (max-width: 360px) {
+
+    .header h1 {
+        font-size: 2.8rem;
+    }
+
+    .header .subtitle {
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+    }
+
+    .theme-btn {
+        font-size: 0.5rem;
+        padding: 4px 3px;
+    }
+
+    .mode-btn {
+        font-size: 0.6rem;
+        padding: 6px 4px;
+    }
+
+    .cell {
+        font-size: 1.6rem;
+    }
+
+    .score-item .value {
+        font-size: 1.1rem;
+    }
+}
