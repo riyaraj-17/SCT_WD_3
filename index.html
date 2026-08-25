@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>XOXO — Tic-Tac-Toe Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Creepster&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+    <div class="wrap">
+
+        <!-- ================= HEADER ================= -->
+        <div class="header">
+            <div class="eyebrow">✦ XOXO</div>
+            <h1>Tic-Tac-Toe</h1>
+            <p class="subtitle">Pro Edition</p>
+        </div>
+
+        <!-- ================= THEME SELECTOR (4 THEMES) ================= -->
+        <div class="theme-select">
+            <button class="theme-btn active" data-theme="spooky">👻 Spooky</button>
+            <button class="theme-btn" data-theme="neon">💜 Neon</button>
+            <button class="theme-btn" data-theme="luxury">🖤 Gold</button>
+            <button class="theme-btn" data-theme="arcade">🕹️ Arcade</button>
+        </div>
+
+        <!-- ================= MODE SELECTOR ================= -->
+        <div class="mode-select">
+            <button class="mode-btn active" data-mode="cpu">🤖 Vs Computer</button>
+            <button class="mode-btn" data-mode="pvp">👥 Vs Player</button>
+        </div>
+
+        <!-- ================= STATUS ================= -->
+        <div class="status">
+            <span class="dot" id="dot"></span>
+            <span id="statusText">Your turn — X</span>
+            <span class="timer" id="timer">⏱ 0s</span>
+        </div>
+
+        <!-- ================= BOARD ================= -->
+        <div class="board" id="board">
+            <button class="cell" data-index="0"></button>
+            <button class="cell" data-index="1"></button>
+            <button class="cell" data-index="2"></button>
+            <button class="cell" data-index="3"></button>
+            <button class="cell" data-index="4"></button>
+            <button class="cell" data-index="5"></button>
+            <button class="cell" data-index="6"></button>
+            <button class="cell" data-index="7"></button>
+            <button class="cell" data-index="8"></button>
+        </div>
+
+        <!-- ================= SCOREBOARD ================= -->
+        <div class="scoreboard">
+            <div class="score-item">
+                <span class="label">X</span>
+                <span class="value" id="scoreX">0</span>
+                <span class="sub">Wins</span>
+            </div>
+            <div class="score-item">
+                <span class="label">Draws</span>
+                <span class="value" id="scoreDraw">0</span>
+                <span class="sub">Ties</span>
+            </div>
+            <div class="score-item">
+                <span class="label" id="oLabel">O</span>
+                <span class="value" id="scoreO">0</span>
+                <span class="sub">Wins</span>
+            </div>
+        </div>
+
+        <!-- ================= STATS ================= -->
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">🎯 Win Rate</span>
+                <span class="stat-value" id="winRate">0%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">⚡ Streak</span>
+                <span class="stat-value" id="streak">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">🔄 Moves</span>
+                <span class="stat-value" id="totalMoves">0</span>
+            </div>
+        </div>
+
+        <!-- ================= RESET ================= -->
+        <button class="btn-reset" id="resetBtn">⟳ New Game</button>
+
+        <!-- ================= CONFETTI ================= -->
+        <div class="confetti-container" id="confettiContainer"></div>
+
+        <!-- ================= SPOOKY EFFECTS ================= -->
+        <div class="spooky-effects">
+            <div class="bat bat1">🦇</div>
+            <div class="bat bat2">🦇</div>
+            <div class="ghost ghost1">👻</div>
+            <div class="ghost ghost2">👻</div>
+        </div>
+
+        <!-- ================= ARCADE EFFECTS ================= -->
+        <div class="arcade-effects">
+            <div class="scanline"></div>
+            <div class="crt-overlay"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
